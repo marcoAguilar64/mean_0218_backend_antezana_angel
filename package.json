@@ -1,0 +1,21 @@
+{
+  "name": "mean_0218_backend_antezana_angel",
+  "version": "1.0.0",
+  "description": "Creando API REST Ful en Express",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/anghel7/mean_0218_backend_antezana_angel.git"
+  },
+  "keywords": [
+    "API",
+    "REST",
+    "Express"
+  ],
+  "author": "Angel Antezana Flores",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/anghel7/mean_0218_backend_antezana_angel#readme"
+}
