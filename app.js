@@ -4,19 +4,17 @@ app.get('/',function (request, response) {
   response.send('hello world');
 });
 
-app.get('/usuarios',function (request, response) {
+app.route('/usuarios')
+.get(function (request, response) {
   response.send('accediendo a usuarios con el metodo get');
-});
-
-app.post('/usuarios',function (request, response) {
+})
+.post(function (request, response) {
   response.send('accediendo a usuarios con el metodo post');
-});
-
-app.put('/usuarios',function (request, response) {
+})
+.put(function (request, response) {
   response.send('accediendo a usuarios con el metodo put');
-});
-
-app.delete('/usuarios',function (request, response) {
+})
+.delete(function (request, response) {
   response.send('accediendo a usuarios con el metodo delete');
 });
 
