@@ -17,5 +17,8 @@
   ],
   "author": "Angel Antezana Flores",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/anghel7/mean_0218_backend_antezana_angel#readme"
+  "homepage": "https://bitbucket.org/anghel7/mean_0218_backend_antezana_angel#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
 }
