@@ -49,14 +49,26 @@ router.put('/:id', function (request, response) {
     } else {
       response.send({
         message: 'A user has been updated',
-        data:userUpdated
+        data: userUpdated
       });
     }
   });
 });
 
-router.delete('/', function (request, response) {
-  response.send('accediendo a usuarios con el metodo delete');
+router.delete('/:id', function (request, response) {
+  userModel.findByIdAndRemove(request.params.id, function (err, userDeleted) {
+    if (err) {
+      return response.status(500).send({
+        message: 'Thera was a problem deleting a user',
+        error: err
+      });
+    }else{
+      response.send({
+        message: 'A user has been deleted',
+        data:userDeleted
+      });
+    }
+  });
 });
 
 router.get('/:id', function (request, response) {
