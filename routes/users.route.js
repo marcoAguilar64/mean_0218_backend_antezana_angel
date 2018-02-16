@@ -12,7 +12,7 @@ router.get('/', function (request, response) {
     } else {
       response.send({
         message: 'The userlist has been retrieved',
-        data:userList
+        data: userList
       });
     }
   });
@@ -46,8 +46,20 @@ router.delete('/', function (request, response) {
   response.send('accediendo a usuarios con el metodo delete');
 });
 
-router.get('/find', function (request, response) {
-  response.send('buscando un users con el metodo get');
+router.get('/:id', function (request, response) {
+  userModel.findById(request.params.id, {}, null, function (err, userFound) {
+    if (err) {
+      return response.status(500).send({
+        message: 'Thera was a problem retrieving the user by id',
+        error: err
+      });
+    } else {
+      response.send({
+        message: 'User found by id',
+        data: userFound
+      });
+    }
+  });
 });
 
 module.exports = router;
