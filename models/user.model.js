@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+/*https://stackoverflow.com/questions/18022365/mongoose-validate-email-syntax*/
 
 var validateemail = function (email) {
   var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -46,5 +47,9 @@ var userSchema = mongoose.Schema({
     default: false
   }
 });
+
+userSchema.methods.speak = function () {
+  console.log('Hi my name is : ' + this.name + '. How are you?');
+};
 
 module.exports = mongoose.model('User', userSchema);

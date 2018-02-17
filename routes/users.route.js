@@ -8,7 +8,7 @@ router.get('/', function (request, response) {
   }, {
     password: 0,
     deleted: 0,
-    __v:0
+    __v: 0
   }, null, function (err, userList) {
     if (err) {
       return response.status(500).send({
@@ -34,6 +34,7 @@ router.post('/', function (request, response) {
           error: err
         });
     } else {
+      userCreated.speak();     
       response.send({
         message: 'A new user has been created',
         data: userCreated
