@@ -1,5 +1,10 @@
 var mongoose = require('mongoose');
 
+var validateemail = function (email) {
+  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return re.test(email)
+};
+
 var userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -12,15 +17,16 @@ var userSchema = mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique:true,
+    unique: true,
     minlength: 5,
-    maxlength:10,
-    trim:true
+    maxlength: 10,
+    trim: true
   },
   email: {
     type: String,
     required: true,
-    unique:true
+    unique: true,
+    validate: [validateemail, 'Please enter a valid email']
   },
   password: {
     type: String,
@@ -32,7 +38,7 @@ var userSchema = mongoose.Schema({
   },
   type: {
     type: String,
-    enum:['USER','ADM'],
+    enum: ['USER', 'ADM'],
     default: 'USER'
   },
   deleted: {
