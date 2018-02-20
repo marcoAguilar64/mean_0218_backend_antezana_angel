@@ -6,22 +6,22 @@ router.get('/', function (request, response) {
   userModel.find({
     deleted: false
   }, {
-    password: 0,
-    deleted: 0,
-    __v: 0
-  }, null, function (err, userList) {
-    if (err) {
-      return response.status(500).send({
-        message: 'Thera was a problem retrieving the user list',
-        error: err
-      });
-    } else {
-      response.send({
-        message: 'The userlist has been retrieved',
-        data: userList
-      });
-    }
-  });
+      password: 0,
+      deleted: 0,
+      __v: 0
+    }, null, function (err, userList) {
+      if (err) {
+        return response.status(500).send({
+          message: 'Thera was a problem retrieving the user list',
+          error: err
+        });
+      } else {
+        response.send({
+          message: 'The userlist has been retrieved',
+          data: userList
+        });
+      }
+    });
 });
 
 router.post('/', function (request, response) {
@@ -34,7 +34,7 @@ router.post('/', function (request, response) {
           error: err
         });
     } else {
-      userCreated.speak();     
+      userCreated.speak();
       response.send({
         message: 'A new user has been created',
         data: userCreated.getDtoUser()
@@ -63,18 +63,34 @@ router.put('/:id', function (request, response) {
 });
 
 router.delete('/:id', function (request, response) {
-  userModel.findByIdAndRemove(request.params.id, function (err, userDeleted) {
-    if (err) {
+  userModel.findOne({
+    _id: request.params.id,
+    deleted: false
+  }, function (err, userFound) {
+    if (err)
       return response.status(500).send({
-        message: 'Thera was a problem deleting a user',
+        message: 'There was a problem to delete the user, error server',
         error: err
       });
-    } else {
-      response.send({
-        message: 'A user has been deleted',
-        data: userDeleted.getDtoUser()
+    if (!userFound)
+      return response.status(404).send({
+        message: 'There was a problem to get the user(invalid id)',
+        error: ''
       });
-    }
+
+    userFound.deleted = true;
+
+    userFound.save(function (error, userUpdated) {
+      if (error)
+        return response.status(500).send({
+          message: 'There was a problem to delete the user, error server',
+          error: error
+        });
+      response.send({
+        message: 'The user has been deleted',
+        data: userUpdated.getDtoUser()
+      });
+    });
   });
 });
 
