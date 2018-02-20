@@ -52,4 +52,18 @@ userSchema.methods.speak = function () {
   console.log('Hi my name is : ' + this.name + '. How are you?');
 };
 
+userSchema.methods.getDtoUser = function () {
+  var userDTO = {
+    _id: this._id,
+    name: this.name,
+    lastname: this.lastname,
+    username: this.username,
+    email: this.email,
+    avatar: this.avatar,
+    type: this.type
+    
+  };
+  return userDTO;
+};
+
 module.exports = mongoose.model('User', userSchema);

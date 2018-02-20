@@ -37,7 +37,7 @@ router.post('/', function (request, response) {
       userCreated.speak();     
       response.send({
         message: 'A new user has been created',
-        data: userCreated
+        data: userCreated.getDtoUser()
       });
     }
 
@@ -56,7 +56,7 @@ router.put('/:id', function (request, response) {
     } else {
       response.send({
         message: 'A user has been updated',
-        data: userUpdated
+        data: userUpdated.getDtoUser()
       });
     }
   });
@@ -72,7 +72,7 @@ router.delete('/:id', function (request, response) {
     } else {
       response.send({
         message: 'A user has been deleted',
-        data: userDeleted
+        data: userDeleted.getDtoUser()
       });
     }
   });
@@ -88,7 +88,7 @@ router.get('/:id', function (request, response) {
     } else {
       response.send({
         message: 'User found by id',
-        data: userFound
+        data: userFound.getDtoUser()
       });
     }
   });
