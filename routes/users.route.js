@@ -4,6 +4,23 @@ var userModel = require('../models/user.model');
 var bcrypt = require('bcryptjs');
 var secretkeys = require('../secret.keys');
 
+var updateMiddleware = function (request, response, next) {
+  if (request.body.deleted) {
+    return response.status(403).send({
+      message: "No debes tratar de actualizar este campo"
+    });
+  } else {
+    next();
+  }
+};
+
+var updateMiddleware2 = function (request, response, next) {
+  delete request.body.password;
+  delete request.body.type;
+  delete request.body.deleted;
+  next();
+};
+
 router.get('/', function (request, response) {
   userModel.find({
     deleted: false
@@ -50,7 +67,7 @@ router.post('/', function (request, response) {
   });
 });
 
-router.put('/:id', function (request, response) {
+router.put('/:id',updateMiddleware2 ,function (request, response) {
   userModel.findOne({
     _id: request.params.id,
     deleted: false
