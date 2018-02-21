@@ -28,8 +28,10 @@ router.get('/', function (request, response) {
 
 router.post('/', function (request, response) {
   var newUser = new userModel(request.body);
-  var hashedPassword = bcrypt.hashSync(request.body.password, secretkeys.salts);
-  newUser.password = hashedPassword;
+  if (request.body.password) {
+    var hashedPassword = bcrypt.hashSync(request.body.password, secretkeys.salts);
+    newUser.password = hashedPassword;
+  }
   newUser.save(function (err, userCreated) {
     if (err) {
       return response.status(500)
