@@ -108,19 +108,30 @@ router.delete('/:id', function (request, response) {
 });
 
 router.get('/:id', function (request, response) {
-  userModel.findById(request.params.id, {}, null, function (err, userFound) {
-    if (err) {
-      return response.status(500).send({
-        message: 'Thera was a problem retrieving the user by id',
-        error: err
-      });
-    } else {
+  userModel.findOne({
+    _id: request.params.id,
+    deleted: false
+  }, {
+      __v: 0,
+      password: 0,
+      deleted: 0
+    }, null, function (err, userFound) {
+      if (err)
+        return response.status(500).send({
+          message: 'There was a problem to find the user, server error',
+          error: err
+        });
+      if (!userFound)
+        return response.status(404).send({
+          message: 'There was a proble to find the user, invalid id',
+          error: ''
+        });
+
       response.send({
-        message: 'User found by id',
-        data: userFound.getDtoUser()
+        message: 'User retrieved',
+        data: userFound
       });
-    }
-  });
+    });
 });
 
 module.exports = router;
