@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var userModel = require('../models/user.model');
+var bcrypt = require('bcryptjs');
+var secretkeys = require('../secret.keys');
 
 router.get('/', function (request, response) {
   userModel.find({
@@ -26,6 +28,8 @@ router.get('/', function (request, response) {
 
 router.post('/', function (request, response) {
   var newUser = new userModel(request.body);
+  var hashedPassword = bcrypt.hashSync(request.body.password, secretkeys.salts);
+  newUser.password = hashedPassword;
   newUser.save(function (err, userCreated) {
     if (err) {
       return response.status(500)
