@@ -45,20 +45,33 @@ router.post('/', function (request, response) {
 });
 
 router.put('/:id', function (request, response) {
-  userModel.findByIdAndUpdate(request.params.id, request.body, {
-    new: true
-  }, function (err, userUpdated) {
-    if (err) {
+  userModel.findOne({
+    _id: request.params.id,
+    deleted: false
+  }, function (err, userFound) {
+    if (err)
       return response.status(500).send({
-        message: 'Thera was a problem updating a user',
+        message: 'There was a problem to find the user, error server',
         error: err
       });
-    } else {
+    if (!userFound)
+      return response.status(404).send({
+        message: 'There was a problem to find the user, invalid id',
+        error: ''
+      });
+    for (var propiedad in request.body)
+      userFound[propiedad] = request.body[propiedad];
+    userFound.save(function (error, userUpdated) {
+      if (error)
+        return response.status(500).send({
+          message: 'Thera was a problem to update the user, error serve',
+          error: error
+        });
       response.send({
-        message: 'A user has been updated',
+        message: 'The user has been updated',
         data: userUpdated.getDtoUser()
       });
-    }
+    });
   });
 });
 
