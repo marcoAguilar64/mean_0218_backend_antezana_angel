@@ -32,12 +32,14 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 var usersRoute = require('./routes/users.route');
+var articlesRoute = require('./routes/articles.route');
 
 app.get('/', function (request, response) {
   response.send('hello world');
 });
 
 app.use('/users', usersRoute);
+app.use('/articles', articlesRoute);
 
 app.listen(3000, function () {
   console.log('corriendo en el puerto 3000');
