@@ -11,7 +11,9 @@ var articleSchema = mongoose.Schema({
   },
   content: {
     type: String,
-    required: true
+    required: true,
+    minlength: 20,
+    trim: true
   },
   owner: {
     type: Schema.Types.ObjectId,
