@@ -15,7 +15,7 @@ var articleSchema = mongoose.Schema({
     minlength: 20,
     trim: true
   },
-  owner: {
+  author: {
     type: Schema.Types.ObjectId,
     ref: 'User'
   }
