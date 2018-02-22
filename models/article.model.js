@@ -16,9 +16,13 @@ var articleSchema = mongoose.Schema({
     trim: true
   },
   author: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  deleted: {
+    type: Boolean,
+    default: false
   }
 });
 
