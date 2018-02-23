@@ -34,7 +34,8 @@ router.post('/login', function (request, response) {
 
 router.get('/logout', function (request, response) {
   response.send({
-    message: 'testing logout'
+    auth: false,
+    token: null
   });
 });
 
