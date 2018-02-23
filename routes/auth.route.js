@@ -4,6 +4,7 @@ var userModel = require('../models/user.model');
 var bcrypt = require('bcryptjs');
 var jsonwebtoken = require('jsonwebtoken');
 var secretkeys = require('../secret.keys');
+var verifyTokenMiddleware = require('../auth/verifyTokenMiddleware');
 
 router.post('/login', function (request, response) {
   var query = {
@@ -47,7 +48,7 @@ router.get('/logout', function (request, response) {
   });
 });
 
-router.get('/me', function (request, response) {
+router.get('/me', verifyTokenMiddleware, function (request, response) {
   response.send({
     message: 'testing me'
   });
