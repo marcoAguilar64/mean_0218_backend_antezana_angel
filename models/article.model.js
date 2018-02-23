@@ -31,7 +31,7 @@ articleSchema.methods.getDtoArticle = function () {
     _id: this._id,
     title: this.title,
     content: this.content,
-    owner: this.owner
+    author: this.author.getDtoUser()
   };
   return articleDTO;
 };

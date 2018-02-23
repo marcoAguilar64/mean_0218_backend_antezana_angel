@@ -67,7 +67,7 @@ router.post('/', function (request, response) {
   });
 });
 
-router.put('/:id',updateMiddleware2 ,function (request, response) {
+router.put('/:id', updateMiddleware2, function (request, response) {
   userModel.findOne({
     _id: request.params.id,
     deleted: false
@@ -154,6 +154,8 @@ router.get('/:id', function (request, response) {
         message: 'User retrieved',
         data: userFound
       });
+    }).populate('author').exec(function (err, tweet) {
+      console.log(tweet);
     });
 });
 

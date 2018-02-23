@@ -1,14 +1,28 @@
 var express = require('express');
 var router = express.Router();
 var articleModel = require('../models/article.model');
+var userModel = require('../models/user.model');
 var select = { deleted: 0, __v: 0 };
 var query = { deleted: false };
+
 
 router.get('/', function (request, response) {
   delete query._id;
   articleModel.find(query, select, null, function (err, articleList) {
     handleInternalError(err, response, function () {
-      response.send({ message: 'All articles', data: articleList });
+      userModel.populate(articleList, { path: 'author' }, function (errPopulating, populatedArticleList) {
+        handleInternalError(errPopulating, response, function () {
+          var arrayPopulated = [];
+          populatedArticleList.forEach(populateArticle => {
+            arrayPopulated.push(populateArticle.getDtoArticle());
+          });
+          response.send({
+            message: 'All articles',
+            data: arrayPopulated
+          });
+        })
+      });
+      //response.send({ message: 'All articles', data: articleList });
     });
 
   });
@@ -59,10 +73,17 @@ router.delete('/:id', function (request, response) {
 
 router.get('/:id', function (request, response) {
   query._id = request.params.id;
-  articleModel.findOne(query, select, null, function (err, userFound) {
+  articleModel.findOne(query, {}, null, function (err, articleFound) {
     handleInternalError(err, response, function () {
-      handleRosourceNotFound(userFound, response, function () {
-        response.send({ message: 'Article retrieved', data: userFound });
+      handleRosourceNotFound(articleFound, response, function () {
+        userModel.populate(articleFound, { path: 'author' }, function (errPopulating, populatedArticle) {
+          handleInternalError(errPopulating, response, function () {
+            response.send({
+              message: 'Article retrieved',
+              data: populatedArticle.getDtoArticle()
+            });
+          })
+        });
       });
     });
   });
