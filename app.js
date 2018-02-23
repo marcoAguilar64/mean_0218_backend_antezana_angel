@@ -2,6 +2,10 @@ var express = require('express');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+/*Routes declaration*/
+var usersRoute = require('./routes/users.route');
+var authRoute = require('./routes/auth.route');
+var articlesRoute = require('./routes/articles.route');
 
 var app = express();
 
@@ -11,8 +15,6 @@ app.use(function (request, response, next) {
   response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content_type, Accept');
   next();
 });
-
-
 
 mongoose.connect('mongodb://localhost/exampledb');
 
@@ -31,15 +33,10 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
-var usersRoute = require('./routes/users.route');
-var articlesRoute = require('./routes/articles.route');
-
-app.get('/', function (request, response) {
-  response.send('hello world');
-});
-
+/*Add routes to app*/
 app.use('/users', usersRoute);
 app.use('/articles', articlesRoute);
+app.use('/auth', authRoute);
 
 app.listen(3000, function () {
   console.log('corriendo en el puerto 3000');
