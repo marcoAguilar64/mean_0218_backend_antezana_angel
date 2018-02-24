@@ -3,6 +3,7 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 /*Routes declaration*/
+/*test*/
 var usersRoute = require('./routes/users.route');
 var authRoute = require('./routes/auth.route');
 
