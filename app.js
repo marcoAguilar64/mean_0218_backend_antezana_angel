@@ -9,9 +9,9 @@ var authRoute = require('./routes/auth.route');
 var app = express();
 
 app.use(function (request, response, next) {
-  response.header('Access-Control-Allow-Origin', 'http://localhost:4200');
+  response.header('Access-Control-Allow-Origin', '*');
   response.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETED');
-  response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content_type, Accept');
+  response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content_type, Accept, auth-access-token');
   next();
 });
 
