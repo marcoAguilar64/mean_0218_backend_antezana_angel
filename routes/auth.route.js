@@ -32,7 +32,7 @@ router.post('/login', function (request, response) {
       userid: userFound._id,
       type: userFound.type
     }, secretkeys.token, {
-        expiresIn: 60 * 3
+        expiresIn: 60 * 5
       });
     return response.send({
       auth: true,
@@ -47,10 +47,21 @@ router.get('/logout', function (request, response) {
     token: null
   });
 });
-
+//192.168.1.33:3000/users
 router.get('/me', verifyTokenMiddleware, function (request, response) {
-  response.send({
-    message: 'testing me'
+  userModel.findOne({
+    _id: request.params.userid,
+    deleted: false
+  }, function (err, userFound) {
+    if (err)
+      return response.status(401).send({
+        message: 'internal error',
+        error: null
+      });
+    response.send({
+      message: 'User logged',
+      data: userFound.getDtoUser()
+    });
   });
 });
 

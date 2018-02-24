@@ -6,7 +6,8 @@ var verifyToken = function (request, response, next) {
   if (!tokenEncoded)
     return response.status(403).send({
       auth: false,
-      token: null
+      token: null,
+      message: 'no has enviado el token a travez de los headers'
     });
   jsonwebtoken.verify(tokenEncoded, secretkeys.token,
     function (err, tokenDecoded) {
@@ -14,9 +15,11 @@ var verifyToken = function (request, response, next) {
         return response.status(500).send({
           auth: false,
           token: null,
-          message: 'failed to authenticate'
+          message: 'failed to authenticate, expired token, invalid token'
         });
-      console.log('data tokendecode: ', tokenDecoded);      
+      request.params.userid = tokenDecoded.userid;
+      request.params.type = tokenDecoded.type;
+      next();
     });
 };
 module.exports = verifyToken;

@@ -3,6 +3,7 @@ var router = express.Router();
 var userModel = require('../models/user.model');
 var bcrypt = require('bcryptjs');
 var secretkeys = require('../secret.keys');
+var verifyTokenMiddleware = require('../auth/verifyTokenMiddleware');
 
 var updateMiddleware = function (request, response, next) {
   if (request.body.deleted) {
@@ -21,7 +22,7 @@ var updateMiddleware2 = function (request, response, next) {
   next();
 };
 
-router.get('/', function (request, response) {
+router.get('/', verifyTokenMiddleware, function (request, response) {
   userModel.find({
     deleted: false
   }, {
@@ -43,8 +44,18 @@ router.get('/', function (request, response) {
     });
 });
 
-router.post('/', function (request, response) {
-  var newUser = new userModel(request.body);
+var admmiddleware = function (request, response, next) {
+  if (request.params.type === 'USER') {
+    return response.status(403).send({
+      message: 'No eres administrador y no puedes crear un usuario',
+      data: null
+    });
+  }
+  next();
+}
+
+router.post('/', verifyTokenMiddleware, admmiddleware, function (request, response) {
+   var newUser = new userModel(request.body);
   if (request.body.password) {
     var hashedPassword = bcrypt.hashSync(request.body.password, secretkeys.salts);
     newUser.password = hashedPassword;
@@ -67,7 +78,7 @@ router.post('/', function (request, response) {
   });
 });
 
-router.put('/:id',updateMiddleware2 ,function (request, response) {
+router.put('/:id', verifyTokenMiddleware, admmiddleware, function (request, response) {
   userModel.findOne({
     _id: request.params.id,
     deleted: false
@@ -98,7 +109,7 @@ router.put('/:id',updateMiddleware2 ,function (request, response) {
   });
 });
 
-router.delete('/:id', function (request, response) {
+router.delete('/:id', verifyTokenMiddleware,admmiddleware, function (request, response) {
   userModel.findOne({
     _id: request.params.id,
     deleted: false
@@ -130,7 +141,7 @@ router.delete('/:id', function (request, response) {
   });
 });
 
-router.get('/:id', function (request, response) {
+router.get('/:id', verifyTokenMiddleware, function (request, response) {
   userModel.findOne({
     _id: request.params.id,
     deleted: false
