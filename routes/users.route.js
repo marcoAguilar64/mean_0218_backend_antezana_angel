@@ -54,28 +54,30 @@ var admmiddleware = function (request, response, next) {
   next();
 }
 
+async function async_f(user, response) {
+  var userCreated;
+  try {
+    userCreated = await user.save();
+  } catch (err) {
+    return response.status(500)
+      .send({
+        message: 'There was a problem registering ther user',
+        error: err.errmsg
+      });
+  }
+  return response.send({
+    message: 'A new user has been created',
+    data: userCreated.getDtoUser()
+  });
+}
+
 router.post('/', function (request, response) {
   var newUser = new userModel(request.body);
   if (request.body.password) {
     var hashedPassword = bcrypt.hashSync(request.body.password, secretkeys.salts);
     newUser.password = hashedPassword;
   }
-  /*-------------------------------------*/
-  newUser.save()
-    .then(function (userCreated) {
-      userCreated.speak();
-      response.send({
-        message: 'A new user has been created',
-        data: userCreated.getDtoUser()
-      });
-    }, function (err) {
-      response.status(500)
-        .send({
-          message: 'There was a problem registering ther user',
-          error: err
-        });
-    });
-  /*-------------------------------------*/
+  async_f(newUser, response);
 });
 
 router.put('/:id', function (request, response) {
