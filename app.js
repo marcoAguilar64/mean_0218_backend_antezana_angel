@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 /*Routes declaration*/
 /*test*/
 var usersRoute = require('./routes/users.route');
+var articleRoutes = require('./routes/articles.route');
 var authRoute = require('./routes/auth.route');
 
 var app = express();
