@@ -22,28 +22,6 @@ var updateMiddleware2 = function (request, response, next) {
   next();
 };
 
-router.get('/', verifyTokenMiddleware, function (request, response) {
-  userModel.find({
-    deleted: false
-  }, {
-      password: 0,
-      deleted: 0,
-      __v: 0
-    }, null, function (err, userList) {
-      if (err) {
-        return response.status(500).send({
-          message: 'Thera was a problem retrieving the user list',
-          error: err
-        });
-      } else {
-        response.send({
-          message: 'The userlist has been retrieved',
-          data: userList
-        });
-      }
-    });
-});
-
 var admmiddleware = function (request, response, next) {
   if (request.params.type === 'USER') {
     return response.status(403).send({
@@ -54,8 +32,30 @@ var admmiddleware = function (request, response, next) {
   next();
 }
 
-router.post('/', verifyTokenMiddleware, admmiddleware, function (request, response) {
-   var newUser = new userModel(request.body);
+router.get('/', function (request, response) {
+  userModel.find({
+    deleted: false
+  }, {
+    password: 0,
+    deleted: 0,
+    __v: 0
+  }, null, function (err, userList) {
+    if (err) {
+      return response.status(500).send({
+        message: 'Thera was a problem retrieving the user list',
+        error: err
+      });
+    } else {
+      response.send({
+        message: 'The userlist has been retrieved',
+        data: userList
+      });
+    }
+  });
+});
+
+router.post('/', function (request, response) {
+  var newUser = new userModel(request.body);
   if (request.body.password) {
     var hashedPassword = bcrypt.hashSync(request.body.password, secretkeys.salts);
     newUser.password = hashedPassword;
@@ -78,7 +78,7 @@ router.post('/', verifyTokenMiddleware, admmiddleware, function (request, respon
   });
 });
 
-router.put('/:id', verifyTokenMiddleware, admmiddleware, function (request, response) {
+router.put('/:id', function (request, response) {
   userModel.findOne({
     _id: request.params.id,
     deleted: false
@@ -109,7 +109,7 @@ router.put('/:id', verifyTokenMiddleware, admmiddleware, function (request, resp
   });
 });
 
-router.delete('/:id', verifyTokenMiddleware,admmiddleware, function (request, response) {
+router.delete('/:id', function (request, response) {
   userModel.findOne({
     _id: request.params.id,
     deleted: false
@@ -141,31 +141,31 @@ router.delete('/:id', verifyTokenMiddleware,admmiddleware, function (request, re
   });
 });
 
-router.get('/:id', verifyTokenMiddleware, function (request, response) {
+router.get('/:id', function (request, response) {
   userModel.findOne({
     _id: request.params.id,
     deleted: false
   }, {
-      __v: 0,
-      password: 0,
-      deleted: 0
-    }, null, function (err, userFound) {
-      if (err)
-        return response.status(500).send({
-          message: 'There was a problem to find the user, server error',
-          error: err
-        });
-      if (!userFound)
-        return response.status(404).send({
-          message: 'There was a proble to find the user, invalid id',
-          error: ''
-        });
-
-      response.send({
-        message: 'User retrieved',
-        data: userFound
+    __v: 0,
+    password: 0,
+    deleted: 0
+  }, null, function (err, userFound) {
+    if (err)
+      return response.status(500).send({
+        message: 'There was a problem to find the user, server error',
+        error: err
       });
+    if (!userFound)
+      return response.status(404).send({
+        message: 'There was a proble to find the user, invalid id',
+        error: ''
+      });
+
+    response.send({
+      message: 'User retrieved',
+      data: userFound
     });
+  });
 });
 
 module.exports = router;

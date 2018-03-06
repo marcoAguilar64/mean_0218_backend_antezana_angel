@@ -17,7 +17,7 @@ app.use(function (request, response, next) {
   next();
 });
 
-mongoose.connect('mongodb://localhost/exampledb');
+mongoose.connect('mongodb://localhost/desarrolloweb');
 
 mongoose.connection.on('error', function () {
   console.log('error..............');
