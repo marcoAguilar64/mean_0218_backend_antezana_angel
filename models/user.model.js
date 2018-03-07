@@ -20,7 +20,7 @@ var userSchema = mongoose.Schema({
     required: true,
     unique: true,
     minlength: 5,
-    maxlength: 10,
+    maxlength: 50,
     trim: true
   },
   email: {

@@ -141,6 +141,50 @@ router.delete('/:id', function (request, response) {
   });
 });
 
+router.get('/seed', function (request, response) {
+  var Client = require('node-rest-client').Client;
+
+  var client = new Client();
+
+  client.get("https://randomuser.me/api/?results=10&nat=us", function (data, response2) {
+    var array = [];
+    var hashedPassword = bcrypt.hashSync('1234567', secretkeys.salts);
+    array.push({
+      name: 'Angel',
+      lastname: 'Antezana',
+      username: 'anghel7',
+      email: 'anghel@gmail.com',
+      password: hashedPassword,
+      avatar: 'https://pbs.twimg.com/profile_images/743853773429276672/_cLiC9TB_400x400.jpg',
+      type: 'ADM'
+    });
+    data.results.forEach(element => {
+      array.push({
+        name: element.name.first,
+        lastname: element.name.last,
+        username: element.login.username,
+        email: element.email,
+        password: hashedPassword,
+        avatar: element.picture.large
+      });
+    });
+    userModel.remove({}, function (err) {
+
+      userModel.create(array, function (error, userlistcreated) {
+        if (error)
+          return response.status(500).send({
+            message: 'There was a problem to get the users.',
+            error: error
+          });
+        response.send({
+          data: userlistcreated
+        });
+      });
+
+    });
+  });
+});
+
 router.get('/:id', function (request, response) {
   userModel.findOne({
     _id: request.params.id,
