@@ -1,6 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var articleModel = require('../models/article.model');
+var userModel = require('../models/user.model');
+
+var selectUserPopulated = {
+  path: 'author',
+  select: '-_id -username -avatar -type -deleted -password -__v'
+};
 
 router.get('/', function (request, response) {
   articleModel.find({
@@ -15,9 +21,16 @@ router.get('/', function (request, response) {
         error: err
       });
     } else {
-      response.send({
-        message: 'The articleList has been retrieved',
-        data: articleList
+      userModel.populate(articleList, selectUserPopulated, function (errPopulating, populatedArticleList) {
+        if (errPopulating)
+          return response.status(500).send({
+            message: 'there was a problem retrieving the articles list',
+            error: errPopulating
+          });
+        response.send({
+          message: 'The articleList has been retrieved',
+          data: populatedArticleList
+        });
       });
     }
   });
@@ -25,7 +38,6 @@ router.get('/', function (request, response) {
 
 router.post('/', function (request, response) {
   var newArticle = new articleModel(request.body);
-
   newArticle.save(function (err, articleCreated) {
     if (err) {
       return response.status(500)
@@ -34,10 +46,16 @@ router.post('/', function (request, response) {
           error: err
         });
     } else {
-      articleCreated.speak();
-      response.send({
-        message: 'a new article has been created',
-        data: articleCreated.getDtoArticle()
+      userModel.populate(articleCreated, selectUserPopulated, function (errPopulating, populatedArticle) {
+        if (errPopulating)
+          return response.status(500).send({
+            message: 'There was a problem creating the article',
+            error: errPopulating
+          });
+        response.send({
+          message: 'A new article has been created',
+          data: populatedArticle.getDtoArticle()
+        });
       });
     }
   });
@@ -66,9 +84,16 @@ router.put('/:id', function (request, response) {
           message: 'There was a problem to update the article, error server',
           error: error
         });
-      response.send({
-        message: 'The article has been updated',
-        data: articleUpdated.getDtoArticle()
+      userModel.populate(articleUpdated, selectUserPopulated, function (errPopulating, populatedArticle) {
+        if (errPopulating)
+          return response.status(500).send({
+            message: 'There was a problem updating the article',
+            error: errPopulating
+          });
+        response.send({
+          message: 'article retrieved',
+          data: populatedArticle.getDtoArticle()
+        });
       });
     });
   });
@@ -123,9 +148,16 @@ router.get('/:id', function (request, response) {
         message: 'There was a problem to find the article, invalid id',
         error: ''
       });
-    response.send({
-      message: 'article retrieved',
-      data: articleFound
+    userModel.populate(articleFound, selectUserPopulated, function (errPopulating, populatedArticle) {
+      if (errPopulating)
+        return response.status(500).send({
+          message: 'There was a problem retrieving the article',
+          error: errPopulating
+        });
+      response.send({
+        message: 'article retrieved',
+        data: populatedArticle.getDtoArticle()
+      });
     });
   });
 });

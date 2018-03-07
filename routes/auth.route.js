@@ -32,8 +32,8 @@ router.post('/login', function (request, response) {
       userid: userFound._id,
       type: userFound.type
     }, secretkeys.token, {
-        expiresIn: 60 * 5
-      });
+      expiresIn: 60 * 5
+    });
     return response.send({
       auth: true,
       token: tokenEncoded

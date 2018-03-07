@@ -36,6 +36,7 @@ app.use(bodyParser.json());
 /*Add routes to app*/
 app.use('/users', usersRoute);
 app.use('/auth', authRoute);
+app.use('/articles', articleRoutes);
 
 app.listen(3000, function () {
   console.log('corriendo en el puerto 3000');
