@@ -33,6 +33,7 @@ var admmiddleware = function (request, response, next) {
 }
 
 router.get('/', function (request, response) {
+  console.log('headers-->', request.headers);
   userModel.find({
     deleted: false
   }, {
