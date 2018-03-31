@@ -5,7 +5,7 @@ var userModel = require('../models/user.model');
 
 var selectUserPopulated = {
   path: 'author',
-  select: '-_id -username -avatar -type -deleted -password -__v'
+  select: '-deleted -password -__v'
 };
 
 router.get('/', function (request, response) {

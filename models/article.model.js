@@ -23,6 +23,11 @@ var userSchema = mongoose.Schema({
   deleted: {
     type: Boolean,
     default: false
+  },
+  comments:{
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Comment',
+    required: false
   }
 });
 
@@ -31,7 +36,8 @@ userSchema.methods.getDtoArticle = function () {
     _id: this._id,
     title: this.title,
     content: this.content,
-    author: this.author
+    author: this.author,
+    comments: this.comments
   };
   return articleDTO;
 };

@@ -149,12 +149,12 @@ router.get('/seed', function (request, response) {
 
   client.get("https://randomuser.me/api/?results=10&nat=us", function (data, response2) {
     var array = [];
-    var hashedPassword = bcrypt.hashSync('1234567', secretkeys.salts);
+    var hashedPassword = bcrypt.hashSync('123456', secretkeys.salts);
     array.push({
-      name: 'Angel',
-      lastname: 'Antezana',
-      username: 'anghel7',
-      email: 'anghel@gmail.com',
+      name: 'Marco',
+      lastname: 'Aguilar',
+      username: 'marco',
+      email: 'marco@gmail.com',
       password: hashedPassword,
       avatar: 'https://pbs.twimg.com/profile_images/743853773429276672/_cLiC9TB_400x400.jpg',
       type: 'ADM'

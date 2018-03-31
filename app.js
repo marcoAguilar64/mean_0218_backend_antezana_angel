@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var usersRoute = require('./routes/users.route');
 var articleRoutes = require('./routes/articles.route');
 var authRoute = require('./routes/auth.route');
+var commentRoutes = require('./routes/comments.route');
 
 var app = express();
 
@@ -37,6 +38,8 @@ app.use(bodyParser.json());
 app.use('/users', usersRoute);
 app.use('/auth', authRoute);
 app.use('/articles', articleRoutes);
+app.use('/comments', commentRoutes);
+
 
 app.listen(3000, function () {
   console.log('corriendo en el puerto 3000');
