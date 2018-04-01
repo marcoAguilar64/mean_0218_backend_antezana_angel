@@ -2,10 +2,16 @@ var express = require('express');
 var router = express.Router();
 var articleModel = require('../models/article.model');
 var userModel = require('../models/user.model');
+var commentModel = require("../models/comment.model");
 
 var selectUserPopulated = {
   path: 'author',
   select: '-deleted -password -__v'
+};
+
+var selectCommentPopulated = {
+  path: 'comments',
+  select: '-_id -__v'
 };
 
 router.get('/', function (request, response) {
@@ -130,6 +136,19 @@ router.delete('/:id', function (request, response) {
   });
 });
 
+// router.get('/:id', function (request, response) {
+//   articleModel.findOne({
+//     _id: request.params.id,
+//     deleted: false
+//   }).
+//   populate();
+//   // populate({
+//   //   path: 'comments'
+//   //   // populate:{path: 'author'}
+//   // });
+// });
+
+
 router.get('/:id', function (request, response) {
   articleModel.findOne({
     _id: request.params.id,
@@ -154,11 +173,41 @@ router.get('/:id', function (request, response) {
           message: 'There was a problem retrieving the article',
           error: errPopulating
         });
+      // response.send({
+      //   message: 'article retrieved',
+      //   data: populatedArticle.getDtoArticle()
+      // });
+    });
+
+    //populate comments:
+    commentModel.populate(articleFound, selectCommentPopulated, function (errPopulating, populatedArticle) {
+      if (errPopulating)
+        return response.status(500).send({
+          message: 'There was a problem retrieving the article-comments',
+          error: errPopulating
+        });
+        
+        //populando autores de coments
+        // userModel.populate(articleFound, selectUserPopulated, function (errPopulating, populatedArticle) {
+        //   if (errPopulating)
+        //     return response.status(500).send({
+        //       message: 'There was a problem retrieving the authors-comment',
+        //       error: errPopulating
+        //     });
+        //   // response.send({
+        //   //   message: 'article retrieved',
+        //   //   data: populatedArticle.getDtoArticle()
+        //   // });
+        // });
+        //fin
+
       response.send({
         message: 'article retrieved',
         data: populatedArticle.getDtoArticle()
       });
     });
+
+    //fin
   });
 });
 
